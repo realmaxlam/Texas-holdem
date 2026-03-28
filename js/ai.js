@@ -218,10 +218,10 @@
 
   // AI 角色定义
   const AI_CHARACTERS = [
-    { name: 'Alice', style: 'TAG', avatar: '👩‍💼' },
-    { name: 'Bob',   style: 'LAG', avatar: '😎' },
-    { name: 'Charlie', style: 'TP', avatar: '🤓' },
-    { name: 'Diana', style: 'LP', avatar: '🎀' }
+    { name: '登登', style: 'TAG', avatar: '👩‍💼' },
+    { name: '胡子',   style: 'LAG', avatar: '😎' },
+    { name: '老树', style: 'TP', avatar: '🤓' },
+    { name: '爬爬', style: 'LP', avatar: '🎀' }
   ];
 
   /**
