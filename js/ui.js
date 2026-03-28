@@ -620,15 +620,17 @@
     }
 
     /**
-     * 显示赢家效果
+     * 显示赢家效果（含详细牌型说明）
      */
-    showWinnerEffect(winners) {
+    showWinnerEffect(winners, showdownResults, game) {
       for (const w of winners) {
         const seat = document.getElementById(`seat-${w.player.id}`);
         if (seat) {
           seat.classList.add('winner');
         }
       }
+
+      const winnerIds = new Set(winners.map(w => w.player.id));
 
       // 显示结果信息
       const resultOverlay = document.createElement('div');
@@ -637,17 +639,102 @@
 
       let resultHTML = '<div class="result-content">';
       resultHTML += '<h2 class="result-title">🏆 本局结果 🏆</h2>';
-      resultHTML += '<div class="result-details">';
-      for (const w of winners) {
-        resultHTML += `
-          <div class="result-winner">
-            <span class="winner-avatar">${w.player.avatar}</span>
-            <span class="winner-name">${w.player.name}</span>
-            <span class="winner-hand">${w.hand ? w.hand.name : w.reason}</span>
-            <span class="winner-amount">+${w.amount} 💰</span>
-          </div>
-        `;
+
+      // 公共牌展示
+      if (game && game.communityCards && game.communityCards.length > 0) {
+        resultHTML += '<div class="result-community">';
+        resultHTML += '<div class="result-section-label">公共牌</div>';
+        resultHTML += '<div class="result-cards-row">';
+        for (const card of game.communityCards) {
+          const colorClass = card.isRed ? 'red' : 'black';
+          resultHTML += `<span class="result-card card-${colorClass}">${card.rankDisplay}${card.suitSymbol}</span>`;
+        }
+        resultHTML += '</div></div>';
       }
+
+      // 详细牌型展示
+      resultHTML += '<div class="result-details">';
+
+      if (showdownResults && showdownResults.length > 0) {
+        // 摊牌情况：展示所有未弃牌玩家的手牌和牌型
+        // 先展示赢家，再展示输家
+        const sortedResults = [...showdownResults].sort((a, b) => {
+          const aWin = winnerIds.has(a.player.id) ? 0 : 1;
+          const bWin = winnerIds.has(b.player.id) ? 0 : 1;
+          return aWin - bWin;
+        });
+
+        for (const r of sortedResults) {
+          const isWinner = winnerIds.has(r.player.id);
+          const winAmount = winners.find(w => w.player.id === r.player.id);
+          resultHTML += `
+            <div class="result-player ${isWinner ? 'is-winner' : 'is-loser'}">
+              <div class="result-player-header">
+                <span class="result-avatar">${r.player.avatar}</span>
+                <span class="result-player-name">${r.player.name}</span>
+                ${isWinner ? '<span class="result-crown">👑</span>' : ''}
+                ${isWinner && winAmount ? `<span class="result-win-amount">+${winAmount.amount} 💰</span>` : ''}
+              </div>
+              <div class="result-player-cards">
+                <span class="result-label">手牌：</span>`;
+
+          // 显示手牌
+          for (const card of r.player.holeCards) {
+            const colorClass = card.isRed ? 'red' : 'black';
+            resultHTML += `<span class="result-card card-${colorClass}">${card.rankDisplay}${card.suitSymbol}</span>`;
+          }
+
+          resultHTML += `</div>
+              <div class="result-hand-type">
+                <span class="result-label">牌型：</span>
+                <span class="result-hand-name ${isWinner ? 'winning-hand' : ''}">${r.hand ? r.hand.name : '-'}</span>
+              </div>`;
+
+          // 显示最佳5张牌组合
+          if (r.hand && r.hand.cards) {
+            resultHTML += '<div class="result-best-cards"><span class="result-label">最佳组合：</span>';
+            for (const card of r.hand.cards) {
+              const colorClass = card.isRed ? 'red' : 'black';
+              resultHTML += `<span class="result-card result-card-small card-${colorClass}">${card.rankDisplay}${card.suitSymbol}</span>`;
+            }
+            resultHTML += '</div>';
+          }
+
+          resultHTML += '</div>';
+        }
+
+        // 展示已弃牌的玩家（只显示名字和"已弃牌"）
+        if (game) {
+          const foldedPlayers = game.players.filter(p => p.folded);
+          if (foldedPlayers.length > 0) {
+            resultHTML += '<div class="result-folded-section">';
+            resultHTML += '<div class="result-section-label">已弃牌</div>';
+            resultHTML += '<div class="result-folded-list">';
+            for (const p of foldedPlayers) {
+              resultHTML += `<span class="result-folded-player">${p.avatar} ${p.name}</span>`;
+            }
+            resultHTML += '</div></div>';
+          }
+        }
+      } else {
+        // 非摊牌（所有对手弃牌）
+        for (const w of winners) {
+          resultHTML += `
+            <div class="result-player is-winner">
+              <div class="result-player-header">
+                <span class="result-avatar">${w.player.avatar}</span>
+                <span class="result-player-name">${w.player.name}</span>
+                <span class="result-crown">👑</span>
+                <span class="result-win-amount">+${w.amount} 💰</span>
+              </div>
+              <div class="result-hand-type">
+                <span class="result-hand-name">${w.reason || '其他玩家弃牌'}</span>
+              </div>
+            </div>
+          `;
+        }
+      }
+
       resultHTML += '</div>';
       resultHTML += '<button class="btn-next-hand" onclick="TH.App.nextHand()">下一局</button>';
       resultHTML += '</div>';

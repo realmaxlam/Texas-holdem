@@ -540,6 +540,10 @@
       // 分配底池（简化版：不处理复杂边池）
       const winners = this.calculateWinners(results);
 
+      // 保存摊牌结果供 UI 展示
+      this.showdownResults = results;
+      this.showdownWinners = winners;
+
       // 轮换庄家
       this.dealerIndex = (this.dealerIndex + 1) % this.players.length;
       this.phase = Phase.HAND_OVER;
@@ -548,7 +552,7 @@
         this.onShowdown(results, winners);
       }
       if (this.onHandEnd) {
-        this.onHandEnd(winners);
+        this.onHandEnd(winners, results);
       }
 
       return 'SHOWDOWN';

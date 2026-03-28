@@ -172,10 +172,10 @@
   /**
    * 处理手牌结束
    */
-  function handleHandEnd(winners) {
+  function handleHandEnd(winners, showdownResults) {
     setTimeout(() => {
       UI.render();
-      UI.showWinnerEffect(winners);
+      UI.showWinnerEffect(winners, showdownResults, game);
     }, 800);
   }
 
