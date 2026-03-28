@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="精美的德州扑克网页游戏 - 与4个AI对手进行对战，支持完整的标准德州扑克规则">
+  <title>德州扑克 | Texas Hold'em</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🃏</text></svg>">
+</head>
+<body>
+  <!-- ========== 欢迎界面 ========== -->
+  <div id="welcome-screen">
+    <div class="welcome-content">
+      <h1 class="welcome-title">德州扑克</h1>
+      <p class="welcome-subtitle">TEXAS HOLD'EM POKER</p>
+
+      <!-- AI 对手预览 -->
+      <div class="welcome-players-preview">
+        <div class="preview-player">
+          <span class="preview-avatar">👩‍💼</span>
+          <span class="preview-name">Alice</span>
+          <span class="preview-style" style="color: #e74c3c;">紧凶型</span>
+        </div>
+        <div class="preview-player">
+          <span class="preview-avatar">😎</span>
+          <span class="preview-name">Bob</span>
+          <span class="preview-style" style="color: #f39c12;">松凶型</span>
+        </div>
+        <div class="preview-player">
+          <span class="preview-avatar">🤓</span>
+          <span class="preview-name">Charlie</span>
+          <span class="preview-style" style="color: #3498db;">紧被动型</span>
+        </div>
+        <div class="preview-player">
+          <span class="preview-avatar">🎀</span>
+          <span class="preview-name">Diana</span>
+          <span class="preview-style" style="color: #2ecc71;">松被动型</span>
+        </div>
+      </div>
+
+      <!-- 玩家名称输入 -->
+      <div class="welcome-input-group">
+        <label for="player-name">输入你的名字</label>
+        <input type="text" id="player-name" placeholder="请输入名字" maxlength="12" autocomplete="off">
+      </div>
+
+      <!-- 开始按钮 -->
+      <button class="btn-start" onclick="TH.App.startGame()">
+        🃏 开始游戏
+      </button>
+
+      <div class="welcome-footer">
+        <p>小盲 10 / 大盲 20 · 起始筹码 2000 · 5人桌</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 游戏界面 ========== -->
+  <div id="game-screen" class="hidden"></div>
+
+  <!-- ========== JS 脚本 (按依赖顺序加载) ========== -->
+  <script src="js/deck.js"></script>
+  <script src="js/hand-eval.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // 回车键开始游戏
+    document.getElementById('player-name').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        TH.App.startGame();
+      }
+    });
+  </script>
+</body>
+</html>
