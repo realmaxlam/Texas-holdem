@@ -132,6 +132,7 @@
           <div class="player-position" id="position-${index}"></div>
           <div class="player-cards" id="cards-${index}"></div>
           <div class="player-action-label" id="action-label-${index}"></div>
+          <div class="seat-bet" id="seat-bet-${index}"></div>
         </div>
       `;
 
@@ -418,15 +419,29 @@
     updateBets() {
       for (let i = 0; i < 5; i++) {
         const betArea = document.getElementById(`bet-area-${i}`);
-        if (!betArea) continue;
-
+        const seatBet = document.getElementById(`seat-bet-${i}`);
         const bet = this.game.roundBets[i] || 0;
-        if (bet > 0) {
-          betArea.innerHTML = `<div class="bet-chips"><span class="chip-icon">🪙</span>${bet}</div>`;
-          betArea.style.display = 'block';
-        } else {
-          betArea.innerHTML = '';
-          betArea.style.display = 'none';
+
+        // 浮动下注区（桌面模式）
+        if (betArea) {
+          if (bet > 0) {
+            betArea.innerHTML = `<div class="bet-chips"><span class="chip-icon">🪙</span>${bet}</div>`;
+            betArea.style.display = 'block';
+          } else {
+            betArea.innerHTML = '';
+            betArea.style.display = 'none';
+          }
+        }
+
+        // 座位内下注显示（手机模式）
+        if (seatBet) {
+          if (bet > 0) {
+            seatBet.innerHTML = `<span class="chip-icon">🪙</span>${bet}`;
+            seatBet.style.display = 'flex';
+          } else {
+            seatBet.innerHTML = '';
+            seatBet.style.display = 'none';
+          }
         }
       }
     }

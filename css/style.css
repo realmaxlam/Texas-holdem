@@ -610,6 +610,26 @@ body {
   right: 3px;
 }
 
+/* ============ 座位内下注显示（手机模式用） ============ */
+.seat-bet {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+.seat-bet .chip-icon {
+  font-size: 0.75rem;
+}
+
 /* ============ 行动标签 ============ */
 .player-action-label {
   position: absolute;
@@ -1534,40 +1554,20 @@ body {
     border-width: 1px;
   }
 
-  /* ----- 下注区位置 ----- */
-  #bet-area-0 {
-    top: 60% !important;
-    left: 50% !important;
+  /* ----- 下注区：手机上隐藏浮动下注，改用座位内显示 ----- */
+  .bet-area {
+    display: none !important;
   }
 
-  #bet-area-1 {
-    top: 42% !important;
-    left: 22% !important;
-  }
-
-  #bet-area-2 {
-    top: 24% !important;
-    left: 28% !important;
-  }
-
-  #bet-area-3 {
-    top: 24% !important;
-    left: 72% !important;
-  }
-
-  #bet-area-4 {
-    top: 42% !important;
-    left: 78% !important;
-  }
-
-  .bet-chips {
-    font-size: 0.6rem;
+  .seat-bet {
+    font-size: 0.62rem;
     padding: 2px 6px;
     border-radius: 8px;
+    margin-top: 3px;
   }
 
-  .chip-icon {
-    font-size: 0.7rem;
+  .seat-bet .chip-icon {
+    font-size: 0.65rem;
   }
 
   /* ----- 对白气泡 ----- */
