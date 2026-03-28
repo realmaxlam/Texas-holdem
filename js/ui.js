@@ -9,6 +9,15 @@
   const { AI } = window.TH;
   const { Phase } = window.TH;
 
+  // 位置名称中文映射
+  const POSITION_NAMES = {
+    'BTN': '庄家',
+    'SB': '小盲',
+    'BB': '大盲',
+    'UTG': '枪口',
+    'CO': '关煞'
+  };
+
   // 5 名玩家的座位位置 (CSS %)
   const SEAT_POSITIONS = [
     { top: '78%', left: '50%', transform: 'translate(-50%, -50%)' },   // 0: 用户 (底部中间)
@@ -226,9 +235,9 @@
           styleEl.style.display = 'none';
         }
 
-        // 位置
+        // 位置（显示中文名）
         const posEl = document.getElementById(`position-${i}`);
-        posEl.textContent = p.position;
+        posEl.textContent = POSITION_NAMES[p.position] || p.position;
         if (p.position === 'BTN') {
           posEl.classList.add('is-dealer');
         } else {
@@ -244,8 +253,8 @@
           seat.classList.add('all-in');
         }
         if (i === this.game.currentPlayerIndex &&
-            this.game.phase !== Phase.SHOWDOWN &&
-            this.game.phase !== Phase.HAND_OVER) {
+          this.game.phase !== Phase.SHOWDOWN &&
+          this.game.phase !== Phase.HAND_OVER) {
           seat.classList.add('active');
         }
 
@@ -530,11 +539,11 @@
 
       seat.appendChild(bubble);
 
-      // 4秒后移除
+      // 7秒后移除（给用户充分时间阅读）
       setTimeout(() => {
         bubble.classList.remove('show');
         setTimeout(() => bubble.remove(), 300);
-      }, 3500);
+      }, 9000);
     }
 
     /**
@@ -571,7 +580,7 @@
       if (!logContent) return;
 
       logContent.innerHTML = '';
-      const logs = this.game.actionLog.slice(-30); // 最近30条
+      const logs = this.game.actionLog.slice(-100); // 最近100条
       for (const log of logs) {
         const line = document.createElement('div');
         line.className = 'log-line';
